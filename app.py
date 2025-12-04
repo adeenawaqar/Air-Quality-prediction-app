@@ -1,13 +1,16 @@
+# app.py
 import streamlit as st
 import pandas as pd
 import pickle
 
+# Load the trained model (must be in the same folder)
 with open("decision_tree_model.pkl", "rb") as file:
     model = pickle.load(file)
 
 st.title("Airline Satisfaction Prediction")
 st.write("Enter passenger details to predict Satisfaction:")
 
+# --- User Inputs ---
 gender = st.selectbox("Gender", ["Male", "Female"])
 customer_type = st.selectbox("Customer Type", ["Loyal Customer", "Disloyal Customer"])
 travel_type = st.selectbox("Type of Travel", ["Business", "Personal"])
@@ -25,6 +28,7 @@ inflight_wifi = st.number_input("In-Flight Wifi Service", min_value=0)
 inflight_entertainment = st.number_input("In-Flight Entertainment", min_value=0)
 baggage_handling = st.number_input("Baggage Handling", min_value=0)
 
+# --- Prepare input for model ---
 input_data = pd.DataFrame({
     "Gender": [gender],
     "Customer type": [customer_type],
@@ -44,9 +48,12 @@ input_data = pd.DataFrame({
     "Baggage Handling": [baggage_handling]
 })
 
+# --- Encode categorical features manually ---
 for col in ["Gender", "Customer type", "Type of travel", "Class"]:
     input_data[col] = input_data[col].astype("category").cat.codes
 
+# --- Predict ---
 if st.button("Predict Satisfaction"):
     prediction = model.predict(input_data)[0]
     st.success(f"Predicted Satisfaction: {prediction}")
+
