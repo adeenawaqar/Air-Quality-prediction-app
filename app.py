@@ -43,5 +43,14 @@ input_data = pd.DataFrame({
     "Baggage Handling": [baggage_handling]
 })
 
-if st.button("Show Data"):
+if st.button("Predict Satisfaction"):
     st.write(input_data)
+    score = (
+        onboard_service + seat_comfort + leg_room_service + cleanliness +
+        food_drink + inflight_service + inflight_wifi + inflight_entertainment + baggage_handling
+    )
+    if score >= 30:
+        prediction = "Satisfied"
+    else:
+        prediction = "Not Satisfied"
+    st.success(f"Predicted Satisfaction: {prediction}")
